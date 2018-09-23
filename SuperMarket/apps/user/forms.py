@@ -46,9 +46,12 @@ class LoginModelForm(forms.ModelForm):
 class RegisterModelForm(forms.ModelForm):
     repassword = forms.CharField(max_length=16, min_length=6, error_messages={'required': '请确认密码'},
                                  widget=forms.PasswordInput(attrs={"class": "login-password",
-                                                                   "placeholder": "请输入确认密码"})
-                                 )
+                                                                   "placeholder": "请输入确认密码"}))
 
+    verify = forms.CharField(required=True, error_messages={
+                                            'required':'请输入验证码'
+                                                    },
+                             widget=forms.TextInput(attrs={"class":"reg-yzm" ,"placeholder":"输入验证码"}))
     class Meta:
         model = Reg_login
         fields = ['tel', 'password']
@@ -76,6 +79,16 @@ class RegisterModelForm(forms.ModelForm):
         # 自定义的验证 密码长度的验证 6-16 位
         self.fields['password'].validators.append(validators.MinLengthValidator(6))
         self.fields['password'].validators.append(validators.MaxLengthValidator(16))
+
+
+    # 验证验证码是否一致
+    def clean_verify(self):
+        verify_code_session = self.data.get('verify_code_session')
+        verify_code = self.cleaned_data.get('verify')
+        if verify_code != verify_code_session:
+            raise forms.ValidationError('请输入正确的验证码')
+        return verify_code
+
 
     # 自定义验证手机号码,单个
     def clean_tel(self):

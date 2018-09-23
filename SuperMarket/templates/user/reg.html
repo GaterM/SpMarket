@@ -18,15 +18,16 @@
     <form action="" method="post">
     {% csrf_token %}
         {{ form.tel }}
-        {{ form.errors.tel.0 }}
+        <p class="error">{{ form.errors.tel.0 }}</p>
         {{ form.password }}
-        {{ form.errors.password.0 }}
+        <p class="error">{{ form.errors.password.0 }}</p>
 	    {{ form.repassword }}
-        {{ form.errors.repassword.0 }}
+        <p class="error">{{ form.errors.repassword.0 }}</p>
 	    <div class="yzm" style="margin-top: 1.5rem;">
-	    	<input type="text" class="reg-yzm" placeholder="输入验证码" />
-	    	<input type="submit" class="yzm-hq" value="获取验证码" />
+	    	{{ form.verify }}
+	    	<input type="button" class="yzm-hq" value="获取验证码" />
 	    </div>
+        <p class="error">{{ form.errors.verify.0 }}</p>
 	     <input type="submit" class="login-btn" value="立即注册">
     </form>
 	    <div class="agree">
@@ -34,6 +35,55 @@
 		    <a href="" class="xy">《用户协议》</a>
 		      <div class="r-login">已有账号，请<a href="{% url 'user:login' %}" class="l-login">登录</a></div>
 	    </div>
+{% endblock %}
+{% block footer_js %}
+    <script>
+    $(function () {
+        $('.yzm-hq').on('click', function(){
+            var tel = $('#id_tel').val();
+            // 验证手机号码是否填写
+            if (tel.length != 11){
+                alert('手机号码格式错误');
+                return false;
+            }
+            var that = this;
+            data = {
+                "csrfmiddlewaretoken":"{{ csrf_token }}",
+                'tel':tel
+            };
+           // 发送ajax请求
+            $.post("{% url 'user:send' %}",data, function(data){
+                if(data.status == 200){
+                    // 1.成功按钮禁止点击,使用属性disabled
+                    $(that).val('disabled','disabled');
+                    // 2.按钮变灰
+                    $(that).css('background-clolor','gray');
+                    // 3.按钮显示倒计时
+                    var time = 60;
+                    var msg = time + '秒后重新发送';
+                    $(that).val(msg);
+                    // 4.定时器,按钮动态显示
+                    var timer = window.setInterval(function(){
+                        --time;
+                        if(time == 0){
+                            // 停止定时器
+                            window.clearInterval(timer);
+                            // 清除disabled 属性
+                            $(that).removeAttr('disabled');
+                            // 按钮显示,和颜色
+                            $(that).css('background-color','#76bb2a')
+                            $(that).val('获取验证码');
+                            return
+                        }
+                        msg = time + '秒后重新发送';
+                        $(that).val(msg)
+                    },1000)}else{
+                        alert('data.msg')
+                    }
+            });
+        });
+    });
+    </script>
 {% endblock %}
 
 
