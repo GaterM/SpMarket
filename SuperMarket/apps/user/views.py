@@ -1,3 +1,5 @@
+import uuid
+
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -5,6 +7,7 @@ from django.views import View
 
 from db.base_view import BaseView
 from user.forms import LoginModelForm, RegisterModelForm, InfoModelForm
+from user.help import send_sms
 from user.models import Reg_login
 
 
@@ -114,6 +117,12 @@ class SendCodeView(View):
         # print(verify_code)
         # 发送验证码
         print("====={}======".format(verify_code))
+        # 发送短信   用阿里云
+        __business_id = uuid.uuid1()
+        # print(__business_id)
+        params = "{\"code\":\"%s\"}" % verify_code
+        rs = send_sms(__business_id, tel, "LitterSpider", "SMS_145599624", params)
+        print(rs)
         # 保存验证码到session中
         request.session['verify_code_session'] = verify_code
         request.session.set_expiry(0)

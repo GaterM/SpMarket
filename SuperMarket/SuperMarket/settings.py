@@ -68,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -132,6 +133,12 @@ STATICFILES_DIRS = [
 ]
 
 
+# 配置上传图片
+MEDIA_URL = "/static/media/"
+# 上传图片的物理目录
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
+
+
 # 配置缓存
 CACHES = {
         "default": {
@@ -146,3 +153,9 @@ CACHES = {
 # 配置 session 存储引擎
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
+
+
+
+# ACCESS_KEY_ID/ACCESS_KEY_SECRET 根据实际申请的账号信息进行替换
+ACCESS_KEY_ID = "LTAIMHCCrwCPC6oR"
+ACCESS_KEY_SECRET = "lTltjwv5jGLlgkF1qjo0WxmhYIMBYK"

@@ -22,7 +22,7 @@ class Reg_login(BaseModel):
     sex = models.SmallIntegerField(choices=sex_choices, default=3, verbose_name='性别')
     school = models.CharField(max_length=20, null=True, blank=True, verbose_name='学校名字')
     hometown = models.CharField(max_length=200, null=True, blank=True, verbose_name='家乡')
-    # head = models.ImageField(verbose_name='用户头像', upload_to='head/%Y/%m', default='default/infortx.png')
+    head = models.ImageField(verbose_name='用户头像', upload_to='user/%Y%m/%d', default='image/shop3.png')
     address = models.CharField(verbose_name='详细地址', max_length=100, null=True, blank=True)
 
     class Meta:
