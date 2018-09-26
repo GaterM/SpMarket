@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 
 from db.base_view import BaseView
 from user.forms import LoginModelForm, RegisterModelForm, InfoModelForm
@@ -82,6 +83,21 @@ class InfoView(BaseView):
             return render(request, 'user/reg.html', {'form': form})
             # 注册失败
         return render(request, 'user/reg.html', {'form': form})
+
+
+@csrf_exempt  # 移除令牌限制
+def upload_head(request):
+    if request.method == 'POST':
+        # 获取用户id
+        user_id = request.session.get('ID')
+        # 获取用户对象
+        user = Reg_login.objects.get(pk=user_id)
+        user_head =request.FILES['file']  # 获取对应文件
+        user.save()
+        return JsonResponse({"error":0})
+    else:
+        return JsonResponse({"error":1})
+
 
 
 # 创建退出

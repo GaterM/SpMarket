@@ -40,8 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'haystack',  # 全文检索框架
     'user', # 添加用户app
+    'goods',
     # 'apps',
+    'ckeditor',  # 添加ckeditor富文本编辑器
+    'ckeditor_uploader',  # 添加ckeditor富文本编辑器文件上传部件
 ]
 
 MIDDLEWARE = [
@@ -132,12 +136,32 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
+# # 设置静态文件根目录  上线的时候使用
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-# 配置上传图片
-MEDIA_URL = "/static/media/"
-# 上传图片的物理目录
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
 
+# # 配置上传图片
+# MEDIA_URL = "/static/media/"
+# # 上传图片的物理目录
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
+
+
+# 七牛云密钥等配置
+QINIU_ACCESS_KEY = 'qmUyoSR7BAJTxIYqnzNO-YrbdGqy5j6V12HqWYH2'
+QINIU_SECRET_KEY = 'WIA4U7Ejkb6e0UL2TtkPhwbr0NEpR-EQYXDuvTdz'
+QINIU_BUCKET_NAME = 'image'
+QINIU_BUCKET_DOMAIN = 'pflmpalsv.bkt.clouddn.com/'
+QINIU_SECURE_URL = False      #使用http
+PREFIX_URL = 'http://'
+# 上传文件地址配置
+MEDIA_URL = PREFIX_URL + QINIU_BUCKET_DOMAIN + "/"
+# 上传文件的存储引擎配置
+DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuStorage'
+
+
+
+# 设置 ckeditor 的上传目录
+CKEDITOR_UPLOAD_PATH = "uploads/"
 
 # 配置缓存
 CACHES = {
@@ -159,3 +183,25 @@ SESSION_CACHE_ALIAS = "default"
 # ACCESS_KEY_ID/ACCESS_KEY_SECRET 根据实际申请的账号信息进行替换
 ACCESS_KEY_ID = "LTAIMHCCrwCPC6oR"
 ACCESS_KEY_SECRET = "lTltjwv5jGLlgkF1qjo0WxmhYIMBYK"
+
+
+# 编辑器样式配置
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+    },
+}
+
+
+
+# 全文检索框架的配置
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        # 配置搜索引擎
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        # 配置索引文件目录
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    },
+}
+#当添加、修改、删除数据时，自动生成索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
