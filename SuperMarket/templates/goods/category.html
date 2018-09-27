@@ -21,8 +21,10 @@
             </a>
         </div>
         <div class="cate-search">
-            <input type="text" class="cate-input" placeholder="请输入您要的搜索的产品关键词"/>
-            <input type="button" class="cate-btn"/>
+            <form action="/search/" method="get">
+                <input type="text" name="q" class="cate-input" placeholder="请输入您要的搜索的产品关键词"/>
+                <input type="submit" value="" class="cate-btn"/>
+            </form>
         </div>
     </header>
     <div style="height: 49px;"></div>
@@ -60,7 +62,7 @@
                         <div class="list-cart">
                             <div class="d-stock ">
                                 <a class="decrease">-</a>
-                                <input id="num" readonly="" class="text_box" name="" type="text" value="0">
+                                <input id="num" readonly="" class="text_box" name="goods_num" type="text" value="0">
                                 <a class="increase">+</a>
                             </div>
                         </div>
@@ -76,7 +78,7 @@
 {% block footer %}
     <div style="height: 55px;"></div>
     <div class="fix-bot">
-        <div class="fix-bot-cart"><i>8</i></div>
+        <div class="fix-bot-cart"><i>0</i></div>
         <a href="tureorder.html" class="list-js">去结算</a>
         <a href="tureorder.html" class="list-jsk">一键快购</a>
         <!--<div class="js-text">
@@ -122,6 +124,8 @@
             } else if ("{{ order }}" == 3) {
                 $("#goods_price").attr('href', "{% url 'goods:category' cate_id 2 %}")
             }
+
+            // 使用 ajax 响应购物车
         })
 
     </script>

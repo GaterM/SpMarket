@@ -121,12 +121,12 @@ class InfoModelForm(forms.ModelForm):
         model = Reg_login
         fields = ['nickname', 'tel', 'sex', 'school', 'hometown', 'born', 'address']
 
-        # widgets = {
-        #     'nickname': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '默契'}),
-        #     'tel': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '13012345678'}),
-        #     # 'sex': forms.TextInput(attrs={'class': 'infor-tele'}),
-        #     'school': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '就读于哪个学校'}),
-        #     'hometown': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '来自哪里'}),
-        #     'born': forms.DateInput(attrs={'class': 'infor-tele', 'placeholder': '出生日期'}),
-        #     'address': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '详细地址'}),
-        # }
+        widgets = {
+            'nickname': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '默契'}),
+            'tel': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '13012345678'}),
+            'sex': forms.CheckboxInput(attrs={'class': 'infor-tele'}),
+            'school': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '就读于哪个学校'}),
+            'hometown': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '来自哪里'}),
+            'born': forms.DateInput(attrs={'class': 'infor-tele', 'placeholder': '出生日期'}),
+            'address': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '详细地址'}),
+        }

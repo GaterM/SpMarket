@@ -30,7 +30,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'haystack',  # 全文检索框架
-    'user', # 添加用户app
+    'user',  # 添加用户app
     'goods',
     # 'apps',
     'ckeditor',  # 添加ckeditor富文本编辑器
@@ -80,7 +79,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SuperMarket.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
@@ -90,7 +88,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -110,7 +107,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -125,7 +121,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -151,39 +146,34 @@ QINIU_ACCESS_KEY = 'qmUyoSR7BAJTxIYqnzNO-YrbdGqy5j6V12HqWYH2'
 QINIU_SECRET_KEY = 'WIA4U7Ejkb6e0UL2TtkPhwbr0NEpR-EQYXDuvTdz'
 QINIU_BUCKET_NAME = 'image'
 QINIU_BUCKET_DOMAIN = 'pflmpalsv.bkt.clouddn.com/'
-QINIU_SECURE_URL = False      #使用http
+QINIU_SECURE_URL = False  # 使用http
 PREFIX_URL = 'http://'
 # 上传文件地址配置
 MEDIA_URL = PREFIX_URL + QINIU_BUCKET_DOMAIN + "/"
 # 上传文件的存储引擎配置
 DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuStorage'
 
-
-
 # 设置 ckeditor 的上传目录
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
 # 配置缓存
 CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://127.0.0.1:6379/1",
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            }
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
+}
 
 # 配置 session 存储引擎
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
-
-
 # ACCESS_KEY_ID/ACCESS_KEY_SECRET 根据实际申请的账号信息进行替换
 ACCESS_KEY_ID = "LTAIMHCCrwCPC6oR"
 ACCESS_KEY_SECRET = "lTltjwv5jGLlgkF1qjo0WxmhYIMBYK"
-
 
 # 编辑器样式配置
 CKEDITOR_CONFIGS = {
@@ -192,16 +182,16 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-
-
 # 全文检索框架的配置
 HAYSTACK_CONNECTIONS = {
     'default': {
         # 配置搜索引擎
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        # 'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        # 中文分词 使用 jieba 的whoosh引擎
+        'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
         # 配置索引文件目录
         'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
     },
 }
-#当添加、修改、删除数据时，自动生成索引
+# 当添加、修改、删除数据时，自动生成索引
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
