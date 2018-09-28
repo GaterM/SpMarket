@@ -35,13 +35,13 @@ class Reg_login(BaseModel):
 
 
 # 创建收货地址模型
-class Address(BaseModel):
-    username = models.ForeignKey(to='Reg_login', verbose_name='用户名')
-    consignee = models.CharField(max_length=20, verbose_name='收货人')
-    tel = models.CharField(max_length=11, verbose_name='收货人电话')
-    province = models.CharField(max_length=20, verbose_name='省')
-    city = models.CharField(max_length=20, verbose_name='市')
-    county = models.CharField(max_length=20, verbose_name='县')
-    street = models.CharField(max_length=50, verbose_name='街道')
-    detail_addr = models.CharField(max_length=100,verbose_name='详细地址')
-    pass
+# class Address(BaseModel):
+#     username = models.ForeignKey(to='Reg_login', verbose_name='用户名')
+#     consignee = models.CharField(max_length=20, verbose_name='收货人')
+#     tel = models.CharField(max_length=11, verbose_name='收货人电话')
+#     province = models.CharField(max_length=20, verbose_name='省')
+#     city = models.CharField(max_length=20, verbose_name='市')
+#     county = models.CharField(max_length=20, verbose_name='县')
+#     street = models.CharField(max_length=50, verbose_name='街道')
+#     detail_addr = models.CharField(max_length=100,verbose_name='详细地址')
+#     pass

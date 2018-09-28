@@ -27,6 +27,9 @@ class LoginView(View):
             request.session['tel'] = user.tel
             request.session.set_expiry(0)
             # 跳转到个人中心
+            # 如果有参数,跳转到指定界面
+            if request.GET.get('next', None):
+                return redirect(request.GET.get('next'))
             return redirect(reverse('user:center'))
         # 验证失败
         return render(request, 'user/login.html', {'form': form})

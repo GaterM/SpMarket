@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views import View
 
 # 商品首页
+from django_redis import get_redis_connection
+
 from goods.models import Goods_sku, Broadcast, Activity, Goods_category, Activity_area
 
 
@@ -41,11 +44,24 @@ class CategoryView(View):
         order_by_rule = ['id', 'sales_volume', '-goods_price', 'goods_price', '-create_time']
         order = int(order)
         goods_sku = category.goods_sku_set.all().order_by(order_by_rule[order])
+        # 获取用户id
+        car_total = 0
+        user_id = request.session.get("ID")
+        if user_id:
+            # 链接redis
+            cnn = get_redis_connection("default")
+            car_key = "car_%s" % (user_id)
+            vals = cnn.hvals(car_key)
+            if len(vals) > 0:
+                for val in vals:
+                    car_total += int(val)
+
         context = {
             "goods_sku": goods_sku,
             "cate_id": cate_id,
             "categorys": categorys,
             "order": order,
+            "car_total":car_total,
         }
         return render(request, 'goods/category.html', context)
 
@@ -56,9 +72,12 @@ class CategoryView(View):
 # 商品详情
 class GoodsDetailView(View):
     def get(self, request, sku_id):
-        sku_id = int(sku_id)
-        good = Goods_sku.objects.get(pk=sku_id)
-        return render(request, 'goods/detail.html', {"good": good})
+        try:
+            sku_id = int(sku_id)
+            good = Goods_sku.objects.get(pk=sku_id)
+            return render(request, 'goods/detail.html', {"good": good})
+        except:
+            return redirect(reverse("goods:index"))
 
     def post(self, request):
         pass

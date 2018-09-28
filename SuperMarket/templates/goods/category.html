@@ -2,15 +2,15 @@
 {% load static %}
 
 {% block meta_css %}
-<style type="text/css">
-    .list-price {
-        background: url({% if order == 2 %}{% static 'images/order-bot.png' %}
+    <style type="text/css">
+        .list-price {
+            background: url({% if order == 2 %}{% static 'images/order-bot.png' %}
             {% elif order == 3 %}{% static 'images/order-top.png' %}
             {% else %}{% static 'images/order.png' %}{% endif %}) no-repeat right center;
-        padding-right: 20px;
-        font-style: normal;
-    }
-</style>
+            padding-right: 20px;
+            font-style: normal;
+        }
+    </style>
 {% endblock %}
 
 {% block header %}
@@ -62,7 +62,8 @@
                         <div class="list-cart">
                             <div class="d-stock ">
                                 <a class="decrease">-</a>
-                                <input id="num" readonly="" class="text_box" name="goods_num" type="text" value="0">
+                                <input id="num" sku_id="{{ good.pk }}" readonly="" class="text_box" name="goods_num"
+                                       type="text" value="0">
                                 <a class="increase">+</a>
                             </div>
                         </div>
@@ -78,8 +79,8 @@
 {% block footer %}
     <div style="height: 55px;"></div>
     <div class="fix-bot">
-        <div class="fix-bot-cart"><i>0</i></div>
-        <a href="tureorder.html" class="list-js">去结算</a>
+        <div class="fix-bot-cart"><i id="goods_total">{{ car_total }}</i></div>
+        <a href="{% url 'shopcar:showshopcar' %}" class="list-js">去结算</a>
         <a href="tureorder.html" class="list-jsk">一键快购</a>
         <!--<div class="js-text">
            <p><b>￥217.80</b></p>
@@ -92,7 +93,7 @@
 {% block footer_js %}
     <script>
         //购物数量加减
-        $(function () {
+        $(function(){
             $('.increase').click(function () {
                 var self = $(this);
                 var current_num = parseInt(self.siblings('input').val());
@@ -102,8 +103,34 @@
                     self.siblings(".text_box").fadeIn();
                 }
                 self.siblings('input').val(current_num);
-                update_item(self.siblings('input').data('item-id'));
-            })
+
+                // 获取商品sku_id 和数量
+                sku_id = self.siblings('input').attr('sku_id');
+                //console.debug(sku_id)
+                // 准备json数据
+                var data = {
+                    "sku_id": sku_id,
+                    "goods_count": 1,
+                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                };
+                // 发送ajax 请求
+                $.post('{% url "shopcar:saveshopcar" %}', data, function (response) {
+                    //console.debug(response);
+                    if (response.error == 1) {
+                        // 说明用户为登录,用户确认是否跳转到登录页面
+                        var rs = confirm("你没有登录,是否要跳转到登录页面");
+                        if (rs) {
+                            location.href = "{% url 'user:login' %}?next={% url 'goods:category' cate_id order %}"
+                        }
+                    } else if (response.error == 0) {
+                        {#console.debug($('#goods_total').text());#}
+                        $('#goods_total').text(response.car_total)
+                    } else {
+                        alert(response.msg)
+                    }
+                });
+            });
+
             $('.decrease').click(function () {
                 var self = $(this);
                 var current_num = parseInt(self.siblings('input').val());
@@ -114,19 +141,38 @@
                         self.siblings(".text_box").fadeOut();
                     }
                     self.siblings('input').val(current_num);
-                    update_item(self.siblings('input').data('item-id'));
                 }
+                 // 获取商品sku_id 和数量
+                 sku_id = self.siblings('input').attr('sku_id');
+                 //console.debug(sku_id)
+                 // 准备json数据
+                 var data = {
+                    "sku_id": sku_id,
+                    // "goods_count": -1,
+                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                };
+                 // 发送ajax 请求
+                 $.post('{% url "shopcar:delshopcar" %}', data, function (response) {
+                    //console.debug(response);
+                    if (response.error == 0) {
+                        $('#goods_total').text(response.car_total)
+                    } else {
+                        alert(response.msg)
+                    }
+                })
             });
+        });
+
 
             // 改变价格a标签上的链接
+        $(function () {
             if ("{{ order }}" == 2) {
                 $("#goods_price").attr('href', "{% url 'goods:category' cate_id 3 %}")
-            } else if ("{{ order }}" == 3) {
-                $("#goods_price").attr('href', "{% url 'goods:category' cate_id 2 %}")
+            }else if ("{{ order }}" == 3){
+                $("#goods_price").attr("href", "{% url 'goods:category' cate_id 2 %}")
             }
+        });
 
-            // 使用 ajax 响应购物车
-        })
 
     </script>
 {% endblock %}
