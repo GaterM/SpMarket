@@ -27,74 +27,111 @@
 {% endblock %}
 
 {% block content %}
-    <li>
-        <a href="">
-            <i style="margin-top: 25px;">头像</i>
-            <div class="infor-pic">
-                <img id="head_img" src="{% static 'images/infortx.png' %}"/>
-            </div>
-        </a>
-    </li>
-
-    <!--dom结构部分-->
-    <div id="uploader-demo">
-        <!--用来存放item-->
-        <div id="fileList" class="uploader-list"></div>
-        <div id="filePicker">选择图片</div>
-    </div>
 
     <form action="" method="post">
         {% csrf_token %}
+        <li>
+            <a href="">
+                <i style="margin-top: 25px;">头像</i>
+                <div class="infor-pic">
+                    <img id="head_img" src="{{ MEDIA_URL }}{{ head }}"/>
+                </div>
+            </a>
+        </li>
+        <!--dom结构部分-->
+        <div id="uploader-demo">
+            <!--用来存放item-->
+            <div id="fileList" class="uploader-list"></div>
+            <div id="filePicker">选择图片</div>
+        </div>
+
         <ul class="safty1">
 
             <li>
-                <a href="">
-                    <i>昵称</i>
-                    {{ form }}
-                </a>
+                <i>昵称</i>
+                {{ form.nickname }}
             </li>
             <li>
                 <a href="">
                     <i>性别</i>
                     <i class="infor-tele">
                         <label class="am-radio-inline">
-                            <input type="radio" name="radio10" checked="checked" value="1" data-am-ucheck>男
+                            {{ form.sex.1 }}
                         </label>
                         <label class="am-radio-inline">
-                            <input type="radio" name="radio10" value="1" data-am-ucheck>女
+                            {{ form.sex.2 }}
+                        </label>
+                        <label class="am-radio-inline">
+                            {{ form.sex.3 }}
                         </label>
                     </i>
                 </a>
             </li>
             <li>
-                <a href="">
-                    <i>生日</i>
-                    <input class="infor-tele" placeholder="出生日期"/>
-                </a>
+                <i>生日</i>
+                {{ form.born }}value=""/>
             </li>
         </ul>
         <div style="height: 10px; background: #efefef;"></div>
         <ul class="safty1">
             <li>
                 <i>学校</i>
-                <input class="infor-tele" placeholder="就读于哪个学校"/>
+                {{ form.school }}
             </li>
             <li>
                 <i>位置</i>
-                <input class="infor-tele" placeholder="详细地址"/>
+                {{ form.address }}
             </li>
             <li>
                 <i>故乡</i>
-                <input class="infor-tele" placeholder="来自哪里"/>
+                {{ form.hometown }}
             </li>
             <li>
                 <i>手机</i>
+                {{ form.tel }}
 
-                {{ tel }}
             </li>
         </ul>
         <input type="submit" style="float:right" value="确认修改">
     </form>
+{% endblock %}
+{% block footer %}
+    <div style="height: 55px;"></div>
+    <div data-am-widget="navbar" class="am-navbar am-cf am-navbar-default sq-foot am-no-layout" id="">
+        <ul class="am-navbar-nav am-cf am-avg-sm-5">
+            <li>
+                <a href="{% url 'goods:index' %}" class="">
+                    <span class="am-icon-home"></span>
+                    <span class="am-navbar-label">首页</span>
+                </a>
+            </li>
+            <li>
+                <a href="message.html" class="">
+                    <span class="am-icon-comments"></span>
+                    <span class="am-navbar-label">动态</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'shopcar:showshopcar' %}" class="">
+                    <span class="am-icon-shopping-cart"></span>
+                    <span class="am-navbar-label">购物车</span>
+                </a>
+            </li>
+            <li>
+                <a href="allorder.html" class="">
+                    <span class="am-icon-file-text"></span>
+                    <span class="am-navbar-label">订单</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'user:center' %}" class="curr">
+                    <span class="am-icon-user"></span>
+                    <span class="am-navbar-label">我的</span>
+                </a>
+            </li>
+        </ul>
+    </div>
 {% endblock %}
 
 {% block footer_js %}
@@ -109,7 +146,7 @@
             swf: "{% static 'webuploader/Uploader.swf' %}",
 
             // 文件接收服务端。
-            server:"{% url 'user:head' %}",
+            server: "{% url 'user:head' %}",
 
             // 选择文件的按钮。可选。
             // 内部根据当前运行是创建，可能是input元素，也可能是flash.
@@ -123,14 +160,14 @@
             }
         });
         // 当有文件添加进来的时候
-        uploader.on( 'fileQueued', function( file ) {
+        uploader.on('fileQueued', function (file) {
             $img = $("#head_img");
             // 创建缩略图
             // 如果为非图片文件，可以不用调用此方法。
             // thumbnailWidth x thumbnailHeight 为 100 x 100
-            uploader.makeThumb( file, function( error, src ) {
-                $img.attr( 'src', src );
-            }, 100, 100 );
+            uploader.makeThumb(file, function (error, src) {
+                $img.attr('src', src);
+            }, 100, 100);
         });
     </script>
 {% endblock %}

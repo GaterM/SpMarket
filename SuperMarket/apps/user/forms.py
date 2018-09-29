@@ -119,12 +119,12 @@ class RegisterModelForm(forms.ModelForm):
 class InfoModelForm(forms.ModelForm):
     class Meta:
         model = Reg_login
-        fields = ['nickname', 'tel', 'sex', 'school', 'hometown', 'born', 'address']
+        exclude = ['create_time', 'update_time', 'is_delete', 'password']
 
         widgets = {
             'nickname': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '默契'}),
             'tel': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '13012345678'}),
-            'sex': forms.CheckboxInput(attrs={'class': 'infor-tele'}),
+            'sex': forms.RadioSelect(),
             'school': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '就读于哪个学校'}),
             'hometown': forms.TextInput(attrs={'class': 'infor-tele', 'placeholder': '来自哪里'}),
             'born': forms.DateInput(attrs={'class': 'infor-tele', 'placeholder': '出生日期'}),

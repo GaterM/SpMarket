@@ -76,16 +76,25 @@ class CenterView(BaseView):
 # 创建个人资料
 class InfoView(BaseView):
     def get(self, request):
-        tel = request.session.get('tel')
-        return render(request, 'user/infor.html', {'tel': tel})
+        id = request.session.get('ID')
+        user = Reg_login.objects.filter(pk=id).first()
+        # print(user)
+        head = user.head
+        # print(head)
+        form = InfoModelForm(user)
+        return render(request, 'user/infor.html', {'form': form, 'head':head})
 
     def post(self, request):
-        form = InfoModelForm(request.POST)
+        # print(request.session.get('ID'))
+        user = Reg_login.objects.filter(pk=request.session.get('ID')).first()
+        # print(instance)
+        form = InfoModelForm(request.POST, instance=user)
+        # print(form)
         if form.is_valid():
             form.save()
-            return render(request, 'user/reg.html', {'form': form})
+            return redirect(reverse('user:center'))
             # 注册失败
-        return render(request, 'user/reg.html', {'form': form})
+        return render(request, 'user/infor.html', {'form': form})
 
 
 @csrf_exempt  # 移除令牌限制
@@ -94,7 +103,7 @@ def upload_head(request):
         # 获取用户id
         user_id = request.session.get('ID')
         # 获取用户对象
-        user = Reg_login.objects.get(pk=user_id)
+        user = Reg_login.objects.filter(pk=user_id).first()
         user_head =request.FILES['file']  # 获取对应文件
         user.save()
         return JsonResponse({"error":0})
